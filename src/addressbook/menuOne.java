@@ -1,26 +1,65 @@
-
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package addressbook;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class menuOne extends JFrame {
 
     private final BackgroundPanel bg;
     private Font horizonFont;
 
+    private JButton prevBtn, nextBtn;
+    private JLabel pageLabel;
+
+    private ArrayList<JButton> nameButtons = new ArrayList<>();
+
+    private String[] names = {
+            "ANDREI JEMS A. TRAPERO",
+            "THERENCE KYLE O. BULANON",
+            "ACE JACOB A. BICOY",
+            "MATT CHERUB OMLANG",
+            "ZAIJAN SEAN A. BICOY",
+            "STUDENT 6",
+            "STUDENT 7",
+            "STUDENT 8",
+            "STUDENT 9",
+            "STUDENT 10",
+            "STUDENT 11",
+            "STUDENT 12",
+            "STUDENT 13",
+            "STUDENT 14",
+            "STUDENT 15",
+            "STUDENT 16",
+            "STUDENT 17",
+            "STUDENT 18",
+            "STUDENT 19",
+            "STUDENT 20",
+            "STUDENT 21",
+            "STUDENT 22",
+            "STUDENT 23",
+            "STUDENT 24",
+            "STUDENT 25",
+            "STUDENT 26",
+            "STUDENT 27",
+            "STUDENT 28",
+            "STUDENT 29",
+            "STUDENT 30"
+            
+    };
+
+    private int currentPage = 1;
+    private final int studentsPerPage = 5;
+
     public menuOne() {
 
         setTitle("Get2Know Gravi – Menu One");
         setSize(1000, 600);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(true);
 
         loadHorizonFont();
@@ -35,15 +74,9 @@ public class menuOne extends JFrame {
     private void loadHorizonFont() {
         try {
             InputStream is = getClass().getResourceAsStream("/addressbook/Horizon.otf");
-            if (is == null) throw new Exception("Font not found");
-
             Font base = Font.createFont(Font.TRUETYPE_FONT, is);
             horizonFont = base;
-
-            GraphicsEnvironment ge =
-                    GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(base);
-
+            GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(base);
         } catch (Exception e) {
             horizonFont = new Font("SansSerif", Font.BOLD, 22);
         }
@@ -57,113 +90,111 @@ public class menuOne extends JFrame {
         classList.setBounds(55, 165, 500, 50);
         bg.add(classList);
 
-        int startY = 200;
-        int spacing = 59;      
+        int startY = 220;
+        int spacing = 60;
         int x = 70;
         int width = 700;
-        int height = 105;
+        int height = 40;
 
-        int currentY = startY;
+        // Create reusable buttons
+        for (int i = 0; i < studentsPerPage; i++) {
+            JButton btn = createNameButton("");
+            btn.setBounds(x, startY + (i * spacing), width, height);
+            nameButtons.add(btn);
+            bg.add(btn);
+        }
 
-        String[] names = {
-                "ANDREI JEMS A. TRAPERO",
-                "THERENCE KYLE O. BULANON",
-                "ACE JACOB A. BICOY",
-                "MATT CHERUB OMLANG",
-                "ZAIJAN SEAN A. BICOY"
-        };
+        // PAGE CONTROLS
+        prevBtn = new JButton("<");
+        nextBtn = new JButton(">");
+        pageLabel = new JLabel("1", SwingConstants.CENTER);
 
-        for (int i = 0; i < names.length; i++) {
+        prevBtn.setBounds(430, 500, 50, 30);
+        pageLabel.setBounds(490, 500, 40, 30);
+        pageLabel.setForeground(Color.WHITE);
+pageLabel.setFont(horizonFont.deriveFont(20f));
+pageLabel.setOpaque(true);
+pageLabel.setBackground(new Color(0,0,0,120));
 
-            JButton btn = createNameButton(names[i]);
-            btn.setBounds(x, currentY, width, height);
+        nextBtn.setBounds(540, 500, 50, 30);
 
-            int index = i; 
+        bg.add(prevBtn);
+        bg.add(pageLabel);
+        bg.add(nextBtn);
 
-            btn.addActionListener(e -> {
-                dispose(); 
+        prevBtn.addActionListener(e -> changePage(-1));
+        nextBtn.addActionListener(e -> changePage(1));
 
-                String info = "";
-
-    switch (index) {
-        case 0 -> info =
-                "Name: ANDREI JEMS A. TRAPERO\n" +
-                "Course: BSIT\n" +
-                "Year: 2nd Year\n" +
-                "Email: andrei@email.com\n" +
-                "Phone: 09123456789";
-
-        case 1 -> info =
-                "Name: THERENCE KYLE O. BULANON\n" +
-                "Course: BSIT\n" +
-                "Year: 2nd Year\n" +
-                "Email: therence@email.com\n" +
-                "Phone: 09111111111";
-
-        case 2 -> info =
-                "Name: ACE JACOB A. BICOY\n" +
-                "Course: BSIT\n" +
-                "Year: 2nd Year\n" +
-                "Email: ace@email.com\n" +
-                "Phone: 09222222222";
-
-        case 3 -> info =
-                "Name: MATT CHERUB OMLANG\n" +
-                "Course: BSIT\n" +
-                "Year: 2nd Year\n" +
-                "Email: matt@email.com\n" +
-                "Phone: 09333333333";
-
-        case 4 -> info =
-                "Name: ZAIJAN SEAN A. BICOY\n" +
-                "Course: BSIT\n" +
-                "Year: 2nd Year\n" +
-                "Email: zaijan@email.com\n" +
-                "Phone: 09444444444";
+        loadPage();
     }
 
-    new StudentInfoPage(names[index], info).setVisible(true);
-                
-            });
+    private void changePage(int direction) {
 
-            bg.add(btn);
-            currentY += spacing;  
+        int maxPage = (int) Math.ceil((double) names.length / studentsPerPage);
+
+        currentPage += direction;
+
+        if (currentPage < 1) currentPage = 1;
+        if (currentPage > maxPage) currentPage = maxPage;
+
+        pageLabel.setText(String.valueOf(currentPage));
+
+        loadPage();
+    }
+
+    private void loadPage() {
+
+        int startIndex = (currentPage - 1) * studentsPerPage;
+
+        for (int i = 0; i < nameButtons.size(); i++) {
+
+            int studentIndex = startIndex + i;
+            JButton btn = nameButtons.get(i);
+
+            if (studentIndex < names.length) {
+
+                btn.setText(names[studentIndex]);
+                btn.setVisible(true);
+
+                for (ActionListener al : btn.getActionListeners()) {
+                    btn.removeActionListener(al);
+                }
+
+                int indexCopy = studentIndex;
+
+                btn.addActionListener(e -> {
+
+                    String info =
+                            "Name: " + names[indexCopy] + "\n" +
+                            "Course: BSIT\n" +
+                            "Year: 2nd Year\n" +
+                            "Email: student@email.com\n" +
+                            "Phone: 09123456789";
+
+                    new StudentInfoPage(names[indexCopy], info).setVisible(true);
+                    dispose();
+                });
+
+            } else {
+                btn.setVisible(false);
+            }
         }
-        JButton creatorsButton = new JButton("CREATORS");
-        creatorsButton.setFont(horizonFont.deriveFont(18f));
-        creatorsButton.setForeground(Color.WHITE);
-        creatorsButton.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
-        creatorsButton.setContentAreaFilled(false);
-        creatorsButton.setFocusPainted(false);
-        creatorsButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        creatorsButton.setBounds(800, 50, 150, 40);
-
-        creatorsButton.addActionListener(e -> {
-            dispose();
-            new Creator1().setVisible(true);
-        });
-
-        bg.add(creatorsButton);
-    
     }
 
     private JButton createNameButton(String text) {
+
         JButton btn = new JButton(text);
 
         btn.setFont(horizonFont.deriveFont(28f));
         btn.setForeground(Color.WHITE);
-
         btn.setBorderPainted(false);
         btn.setContentAreaFilled(false);
         btn.setFocusPainted(false);
-
         btn.setHorizontalAlignment(SwingConstants.LEFT);
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         return btn;
     }
-    
-    
 
     class BackgroundPanel extends JPanel {
 
@@ -179,7 +210,6 @@ public class menuOne extends JFrame {
             }
         }
 
-        @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
             if (img != null)
