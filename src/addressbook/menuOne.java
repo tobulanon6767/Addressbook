@@ -1,3 +1,4 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -82,18 +83,68 @@ public class menuOne extends JFrame {
             btn.addActionListener(e -> {
                 dispose(); 
 
-                switch (index) {
-                    case 0 -> new profileOne().setVisible(true);
-                    case 1 -> new profileTwo().setVisible(true);
-                    case 2 -> new profileThree().setVisible(true);
-                    case 3 -> new profileFour().setVisible(true);
-                    case 4 -> new profileFive().setVisible(true);
-                }
+                String info = "";
+
+    switch (index) {
+        case 0 -> info =
+                "Name: ANDREI JEMS A. TRAPERO\n" +
+                "Course: BSIT\n" +
+                "Year: 2nd Year\n" +
+                "Email: andrei@email.com\n" +
+                "Phone: 09123456789";
+
+        case 1 -> info =
+                "Name: THERENCE KYLE O. BULANON\n" +
+                "Course: BSIT\n" +
+                "Year: 2nd Year\n" +
+                "Email: therence@email.com\n" +
+                "Phone: 09111111111";
+
+        case 2 -> info =
+                "Name: ACE JACOB A. BICOY\n" +
+                "Course: BSIT\n" +
+                "Year: 2nd Year\n" +
+                "Email: ace@email.com\n" +
+                "Phone: 09222222222";
+
+        case 3 -> info =
+                "Name: MATT CHERUB OMLANG\n" +
+                "Course: BSIT\n" +
+                "Year: 2nd Year\n" +
+                "Email: matt@email.com\n" +
+                "Phone: 09333333333";
+
+        case 4 -> info =
+                "Name: ZAIJAN SEAN A. BICOY\n" +
+                "Course: BSIT\n" +
+                "Year: 2nd Year\n" +
+                "Email: zaijan@email.com\n" +
+                "Phone: 09444444444";
+    }
+
+    new StudentInfoPage(names[index], info).setVisible(true);
+                
             });
 
             bg.add(btn);
             currentY += spacing;  
         }
+        JButton creatorsButton = new JButton("CREATORS");
+        creatorsButton.setFont(horizonFont.deriveFont(18f));
+        creatorsButton.setForeground(Color.WHITE);
+        creatorsButton.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
+        creatorsButton.setContentAreaFilled(false);
+        creatorsButton.setFocusPainted(false);
+        creatorsButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        creatorsButton.setBounds(800, 50, 150, 40);
+
+        creatorsButton.addActionListener(e -> {
+            dispose();
+            new Creator1().setVisible(true);
+        });
+
+        bg.add(creatorsButton);
+    
     }
 
     private JButton createNameButton(String text) {
@@ -111,6 +162,8 @@ public class menuOne extends JFrame {
 
         return btn;
     }
+    
+    
 
     class BackgroundPanel extends JPanel {
 
