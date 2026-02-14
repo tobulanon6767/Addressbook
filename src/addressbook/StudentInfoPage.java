@@ -13,6 +13,8 @@ public class StudentInfoPage extends JFrame {
     private JTextArea infoArea;
     private JLabel photoFrame;
 
+    
+    
     public StudentInfoPage(String studentName, String infoText) {
 
         setTitle("Student Information");
@@ -65,6 +67,23 @@ public class StudentInfoPage extends JFrame {
         photoFrame = new JLabel();
         photoFrame.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
         bg.add(photoFrame);
+        
+        JButton backButton = new JButton("BACK");
+backButton.setFont(new Font("SansSerif", Font.BOLD, 14));
+backButton.setForeground(Color.WHITE);
+backButton.setBackground(new Color(0,0,0,150));
+backButton.setFocusPainted(false);
+backButton.setBorder(BorderFactory.createLineBorder(Color.WHITE));
+
+bg.add(backButton);
+
+backButton.setBounds(40, 40, 100, 35);
+
+backButton.addActionListener(e -> {
+    dispose();
+    new menuOne().setVisible(true);
+});
+
 
         updateLayout();
     }
@@ -150,5 +169,8 @@ public class StudentInfoPage extends JFrame {
     );
 }
 
+ 
     }
+   
+
 }
