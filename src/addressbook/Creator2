@@ -1,0 +1,96 @@
+package addressbook;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.InputStream;
+import java.net.URL;
+
+public class Creator2 extends JFrame {
+
+    private Font horizonFont;
+    private BackgroundPanel bg;
+
+    public Creator2() {
+
+        setTitle("Get2Know Gravi – Creators");
+        setSize(1000, 600);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        loadFont();
+
+        bg = new BackgroundPanel();
+        bg.setLayout(null);
+        setContentPane(bg);
+
+        initUI();
+    }
+
+    public void loadFont() {
+        try {
+            InputStream is = getClass().getResourceAsStream("/addressbook/Horizon.otf");
+            Font base = Font.createFont(Font.TRUETYPE_FONT, is);
+            horizonFont = base;
+        } catch (Exception e) {
+            horizonFont = new Font("SansSerif", Font.BOLD, 30);
+        }
+    }
+
+    public void initUI() {
+
+        JLabel name = new JLabel("THERENCE KYLE O. BULANON", SwingConstants.CENTER);
+        name.setFont(horizonFont.deriveFont(36f));
+        name.setForeground(Color.WHITE);
+        name.setBounds(70, 220, 800, 60);
+        bg.add(name);
+
+        JLabel role1 = new JLabel("LEAD PROGRAMMER");
+        role1.setFont(horizonFont.deriveFont(25f));
+        role1.setForeground(Color.WHITE);
+        role1.setBounds(120, 370, 800, 50);
+        bg.add(role1);
+        
+        JLabel role2 = new JLabel("AND DESIGNER");
+        role2.setFont(horizonFont.deriveFont(25f));
+        role2.setForeground(Color.WHITE);
+        role2.setBounds(180, 410, 800, 50);
+        bg.add(role2);
+
+        JButton next = new JButton("NEXT");
+        next.setFont(horizonFont.deriveFont(18f));
+        next.setBounds(820, 60, 120, 40);
+        styleButton(next);
+
+        next.addActionListener(e -> {
+            dispose();
+            new Creator3().setVisible(true);
+        });
+
+        bg.add(next);
+    }
+
+    public void styleButton(JButton btn) {
+        btn.setForeground(Color.WHITE);
+        btn.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
+        btn.setContentAreaFilled(false);
+        btn.setFocusPainted(false);
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    }
+
+    class BackgroundPanel extends JPanel {
+        private Image img;
+
+        public BackgroundPanel() {
+            try {
+                URL url = getClass().getResource("/addressbook/creatorbg.jpg");
+                img = new ImageIcon(url).getImage();
+            } catch (Exception ignored) {}
+        }
+
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            if (img != null)
+                g.drawImage(img, 0, 0, getWidth(), getHeight(), this);
+        }
+    }
+}
